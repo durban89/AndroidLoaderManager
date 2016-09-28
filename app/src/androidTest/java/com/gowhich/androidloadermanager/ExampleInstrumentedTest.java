@@ -1,6 +1,9 @@
 package com.gowhich.androidloadermanager;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.net.Uri;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -22,5 +25,15 @@ public class ExampleInstrumentedTest {
         Context appContext = InstrumentationRegistry.getTargetContext();
 
         assertEquals("com.gowhich.androidloadermanager", appContext.getPackageName());
+    }
+
+    @Test
+    public void insert(){
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        ContentResolver contentResolver = appContext.getContentResolver();
+        ContentValues values = new ContentValues();
+        Uri uri = Uri.parse("com.gowhich.androidloadermanager.service.PersonContentProvider/person");
+        contentResolver.insert(uri, values);
+
     }
 }

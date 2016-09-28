@@ -1,11 +1,15 @@
 package com.gowhich.androidloadermanager.service;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+
+import com.gowhich.androidloadermanager.db.DBHelper;
 
 /**
  * Created by durban126 on 16/9/28.
@@ -13,12 +17,20 @@ import android.support.annotation.Nullable;
 
 public class PersonContentProvider extends ContentProvider {
 
+    private DBHelper dbHelper;
+
     private final static UriMatcher URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
-    private final int PERSON = 1;
-    private final int PERSONS = 2;
+    private final static int PERSON = 1;
+    private final static int PERSONS = 2;
+
+    static {
+        URI_MATCHER.addURI("com.gowhich.androidloadermanager.service.PersonContentProvider", "person", PERSONS);
+        URI_MATCHER.addURI("com.gowhich.androidloadermanager.service.PersonContentProvider", "person/#", PERSON);
+    }
 
     @Override
     public boolean onCreate() {
+        dbHelper = new DBHelper(getContext());
         return false;
     }
 
@@ -31,13 +43,35 @@ public class PersonContentProvider extends ContentProvider {
     @Nullable
     @Override
     public String getType(Uri uri) {
+        int flag = URI_MATCHER.match(uri);
+        switch(flag){
+            case PERSON:
+                //单条记录
+                return "vnd.android.cursor.item/person";
+            case PERSONS:
+                //多条记录
+                return "vnd.android.cursor.item/persons";
+        }
+
         return null;
     }
 
     @Nullable
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        return null;
+        int flag = URI_MATCHER.match(uri);
+        SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
+        Uri uri1 = null;
+        switch (flag){
+            case PERSON:
+                break;
+            case PERSONS:
+                long id = sqLiteDatabase.insert("person", null, values);
+                uri1 = ContentUris.withAppendedId(uri, id);
+                break;
+        }
+
+        return uri1;
     }
 
     @Override

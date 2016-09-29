@@ -32,7 +32,9 @@ public class ExampleInstrumentedTest {
         Context appContext = InstrumentationRegistry.getTargetContext();
         ContentResolver contentResolver = appContext.getContentResolver();
         ContentValues values = new ContentValues();
-        Uri uri = Uri.parse("com.gowhich.androidloadermanager.service.PersonContentProvider/person");
+        values.put("name","王柳");
+        values.put("age","6");
+        Uri uri = Uri.parse("content://com.gowhich.androidloadermanager.service.PersonContentProvider/person");
         contentResolver.insert(uri, values);
 
     }

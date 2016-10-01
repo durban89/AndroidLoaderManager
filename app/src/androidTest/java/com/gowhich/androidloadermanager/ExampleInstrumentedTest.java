@@ -32,10 +32,29 @@ public class ExampleInstrumentedTest {
         Context appContext = InstrumentationRegistry.getTargetContext();
         ContentResolver contentResolver = appContext.getContentResolver();
         ContentValues values = new ContentValues();
-        values.put("name","王柳");
-        values.put("age","6");
+        values.put("name","王柳1");
+        values.put("age","61");
         Uri uri = Uri.parse("content://com.gowhich.androidloadermanager.service.PersonContentProvider/person");
         contentResolver.insert(uri, values);
+
+    }
+
+    @Test
+    public void delete(){
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        ContentResolver contentResolver = appContext.getContentResolver();
+        Uri uri = Uri.parse("content://com.gowhich.androidloadermanager.service.PersonContentProvider/person/1");
+        contentResolver.delete(uri, null, null);
+    }
+
+    public void update(){
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        ContentResolver contentResolver = appContext.getContentResolver();
+        Uri uri = Uri.parse("content://com.gowhich.androidloadermanager.service.PersonContentProvider/person/1");
+        ContentValues values = new ContentValues();
+        values.put("name","张三");
+        values.put("age","10");
+        contentResolver.update(uri, values, null, null);
 
     }
 }

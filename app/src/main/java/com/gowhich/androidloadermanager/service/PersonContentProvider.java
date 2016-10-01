@@ -98,6 +98,22 @@ public class PersonContentProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        return 0;
+        int count = 0;
+        int flag = URI_MATCHER.match(uri);
+        SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
+        switch (flag){
+            case PERSON:
+                long id = ContentUris.parseId(uri);
+                String whereCond = " pid = " + id;
+                if(selection != null && selection.equals("")){
+                    whereCond += selection;
+                }
+                sqLiteDatabase.update("person", values, whereCond, selectionArgs);
+                break;
+            case PERSONS:
+                sqLiteDatabase.update("person", values, selection, selectionArgs);
+                break;
+        }
+        return count;
     }
 }

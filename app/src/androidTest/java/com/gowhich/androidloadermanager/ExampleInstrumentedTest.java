@@ -3,6 +3,7 @@ package com.gowhich.androidloadermanager;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
@@ -44,17 +45,31 @@ public class ExampleInstrumentedTest {
         Context appContext = InstrumentationRegistry.getTargetContext();
         ContentResolver contentResolver = appContext.getContentResolver();
         Uri uri = Uri.parse("content://com.gowhich.androidloadermanager.service.PersonContentProvider/person/1");
-        contentResolver.delete(uri, null, null);
+        int count = contentResolver.delete(uri, null, null);
+        System.out.println("===========delete============" + count);
     }
 
+    @Test
     public void update(){
         Context appContext = InstrumentationRegistry.getTargetContext();
         ContentResolver contentResolver = appContext.getContentResolver();
-        Uri uri = Uri.parse("content://com.gowhich.androidloadermanager.service.PersonContentProvider/person/1");
+        Uri uri = Uri.parse("content://com.gowhich.androidloadermanager.service.PersonContentProvider/person/2");
         ContentValues values = new ContentValues();
         values.put("name","张三");
         values.put("age","10");
-        contentResolver.update(uri, values, null, null);
+        int count = contentResolver.update(uri, values, null, null);
+        System.out.println("===========update============" + count);
+    }
+
+    @Test
+    public void query(){
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        ContentResolver contentResolver = appContext.getContentResolver();
+        Uri uri = Uri.parse("content://com.gowhich.androidloadermanager.service.PersonContentProvider/person/2");
+        Cursor cursor = contentResolver.query(uri, null, null, null, null);
+        while (cursor.moveToNext()){
+            System.out.println("===========cursor============" + cursor.getString(cursor.getColumnIndex("name")));
+        }
 
     }
 }

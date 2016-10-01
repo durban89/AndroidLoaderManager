@@ -1,5 +1,6 @@
 package com.gowhich.androidloadermanager.db;
 
+import android.content.ContentProvider;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -17,9 +18,14 @@ public class DBHelper extends SQLiteOpenHelper {
         super(context, name, null, version);
     }
 
+    public DBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+        super(context, name, factory, version);
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         String sql = "create table person (pid integer primary key autoincrement, name varchar(45), age varchar(45))";
+        db.execSQL(sql);
     }
 
     @Override

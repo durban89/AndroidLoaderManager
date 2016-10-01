@@ -71,12 +71,29 @@ public class PersonContentProvider extends ContentProvider {
                 break;
         }
 
+        System.out.println("======>" + uri1.toString());
         return uri1;
     }
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        return 0;
+        int count = 0;
+        int flag = URI_MATCHER.match(uri);
+        SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
+        switch (flag){
+            case PERSON:
+                long pid = ContentUris.parseId(uri);
+                String whereCond = " pid = " + pid;
+                if(selection != null && selection.equals("")){
+                    whereCond += selection;
+                }
+                count = sqLiteDatabase.delete("person", whereCond, selectionArgs);
+                break;
+            case PERSONS:
+                count = sqLiteDatabase.delete("person", selection, selectionArgs);
+                break;
+        }
+        return count;
     }
 
     @Override

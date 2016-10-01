@@ -37,7 +37,23 @@ public class PersonContentProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        return null;
+        Cursor cursor = null;
+        int flag = URI_MATCHER.match(uri);
+        SQLiteDatabase sqLiteDatabase = dbHelper.getReadableDatabase();
+        switch (flag){
+            case PERSON:
+                long pid = ContentUris.parseId(uri);
+                String whereCond = " pid = " + pid;
+                if(selection != null && selection.equals("")){
+                    whereCond += selection;
+                }
+                cursor = sqLiteDatabase.query("person", projection, whereCond, selectionArgs, null, null, null);
+                break;
+            case PERSONS:
+                cursor = sqLiteDatabase.query("person", projection, selection, selectionArgs, null, null, null);
+                break;
+        }
+        return cursor;
     }
 
     @Nullable
